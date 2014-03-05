@@ -26,10 +26,12 @@ def index():
     #response.flash = T("Welcome to web2py!")
     
     form = SQLFORM.factory(Field('import_file', 'upload', uploadfolder=os.path.join(request.folder,'uploads')))
+
     if request.env.web2py_runtime_gae: 
         from google.appengine.ext import blobstore
-        upload_url = blobstore.create_upload_url(URL(r=request,c='gae',f='upload'))
+        upload_url = blobstore.create_upload_url(URL(r=request,c='default',f='upload'))
         form['_action']=upload_url
+
     ads_cvs = ''
     if form.process().accepted:
         file = request.vars.import_file
@@ -50,6 +52,40 @@ def index():
 
     return dict(message=T('Hello World'), form=form, grid=grid)
 
+def upload():
+    if request.env.web2py_runtime_gae:
+        from google.appengine.ext import blobstore
+        from google.appengine.ext import webapp
+        from google.appengine.ext.webapp import blobstore_handlers
+        from google.appengine.ext.webapp.util import run_wsgi_app
+        #define WSGI request handler for upload 
+        class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+            def post(self):
+                upload_files = self.get_uploads('import_file')
+                blob_info = upload_files[0]
+                globals()['blob_info'] = blob_info
+
+        #create wsgi application
+        application = webapp.WSGIApplication([(request.env.path_info, UploadHandler)],debug=True)
+        application(request.wsgi.environ,request.wsgi.start_response)
+
+        blob_info = globals()['blob_info']
+        start=0
+        end=blobstore.MAX_BLOB_FETCH_SIZE-1
+        read_content=blobstore.fetch_data(blob_info.key(), start, end)
+        blobstore.delete(blob_info.key())
+        
+        ads_cvs = ''
+        try:
+            ads_cvs = zlib.decompress(read_content, 16+zlib.MAX_WBITS)
+        except:
+            return 'upload failed'
+        else:
+            db.listing_ads.truncate();
+            db.commit();
+            db.listing_ads.import_from_csv_file(cStringIO.StringIO(ads_cvs))
+        
+    return 'upload ok'
 
 def ads():
     items = []
