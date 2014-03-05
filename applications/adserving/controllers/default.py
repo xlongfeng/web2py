@@ -9,6 +9,11 @@
 ## - call exposes all registered services (none by default)
 #########################################################################
 
+import os
+import cgi
+import cStringIO
+import zlib
+import xml.etree.ElementTree as ET
 
 def index():
     """
@@ -18,9 +23,51 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
-    response.flash = T("Welcome to web2py!")
-    return dict(message=T('Hello World'))
+    #response.flash = T("Welcome to web2py!")
+    
+    form = SQLFORM.factory(Field('import_file', 'upload', uploadfolder=os.path.join(request.folder,'uploads')))
+    if request.env.web2py_runtime_gae: 
+        from google.appengine.ext import blobstore
+        upload_url = blobstore.create_upload_url(URL(r=request,c='gae',f='upload'))
+        form['_action']=upload_url
+    ads_cvs = ''
+    if form.process().accepted:
+        file = request.vars.import_file
+        if isinstance(file, cgi.FieldStorage):
+            try:
+                ads_cvs = zlib.decompress(file.value, 16+zlib.MAX_WBITS)
+            except:
+                response.flash = T('Import file failed')
+            else:
+                db.listing_ads.truncate();
+                db.commit();
+                db.listing_ads.import_from_csv_file(cStringIO.StringIO(ads_cvs))
+                response.flash = T('Import file success')
+    elif form.errors:
+        response.flash = T('form has errors')
+        
+    grid = SQLFORM.grid(db.listing_ads, links=[dict(header='ADS', body=lambda row:A(T('View ADS'),_href=URL('default','ads',args=[row.sku])))])
 
+    return dict(message=T('Hello World'), form=form, grid=grid)
+
+
+def ads():
+    items = []
+    sku = request.args[0]
+    myrecord = db.listing_ads(sku=sku)
+    
+    try:
+        root = ET.fromstring(myrecord.rss)
+        for child in root[0]:
+            if child.tag == 'item':
+                item = dict()
+                for subitem in child:
+                    item[subitem.tag] = subitem.text
+                items.append(item)
+    except:
+        return T('parse xml error')
+                
+    return dict(items=items)
 
 def user():
     """

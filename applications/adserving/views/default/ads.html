@@ -1,0 +1,24 @@
+<style type="text/css">
+table.adsshopwindow { border: 0px; padding: 0px; margin: 0px;}
+table.adsshopwindow td { border: 0px; padding: 0px; margin: 0px; }
+table.adsshopwindow a { text-decoration:none; display: block; width: 200px; height: 200px; color: #000000; }
+table.adsshopwindow a:hover { position:relative; left: 3px; top: 3px; }
+table.adsshopwindow ul { list-style-type: none; padding: 0px; margin: 0px; }
+table.adsshopwindow li { padding: 0px; margin-bottom: 5px; }
+table.adsshopwindow img { border: 0px; padding: 0px; margin: 0px; }
+</style>
+<table class='adsshopwindow'>
+{{for item in items:}}
+    <tr>
+        <td valign='top' align='center'>
+            <a href={{=item['link']}} target=_blank>
+                <ul>
+                    <li>{{=IMG(_src='http://thumbs3.ebaystatic.com/pict/%s4040.jpg' % item['itemID'])}}</li>
+                    <li>{{=item['title']}}</li>
+                    <li><b>{{=item['currency']}}&nbsp;{{=item['price']}}</b>&nbsp;<img border="0" title="Buy It Now" alt="Buy It Now" src="http://pics.ebaystatic.com/aw/pics/bin_15x54.gif"></li>
+                </ul>
+            </a>
+        </td>
+    </tr>
+{{pass}}
+</table>
