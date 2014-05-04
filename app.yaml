@@ -3,7 +3,7 @@
 #  See http://code.google.com/appengine/docs/python/config/appconfig.html
 #  and http://web2py.com/book/default/chapter/11?search=app.yaml
 
-application: dandelion
+application: xlongfeng-dandelion
 version: 1
 api_version: 1
 

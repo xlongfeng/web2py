@@ -79,6 +79,7 @@ use_janrain(auth, filename='private/janrain.key')
 ## >>> rows=db(db.mytable.myfield=='value').select(db.mytable.ALL)
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
+db.define_table('ebay_item_rss', Field('sku', 'string'), Field('rss', 'text'))
 
 ## after defining tables, uncomment below to enable auditing
-# auth.enable_record_versioning(db)
+auth.enable_record_versioning(db)

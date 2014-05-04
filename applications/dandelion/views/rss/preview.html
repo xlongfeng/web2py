@@ -1,0 +1,42 @@
+<style type="text/css">
+table.rss_shopwindow { border: 0px; padding: 0px; margin: 0px;}
+table.rss_shopwindow td { border: 0px; padding: 3px; margin: 0px;}
+table.rss_shopwindow a {
+  color: #000000;
+  background: #FFFFFF;
+  font-size:12px;
+  font-family: Sans-serif;
+  text-decoration:none;
+  display: inline-block;
+  vertical-align: top;
+  width: 190px;
+  height: 190px;
+  text-align: center;
+  overflow: hidden;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+table.rss_shopwindow a:hover { position:relative; left: 3px; top: 3px; }
+table.rss_shopwindow ul { list-style-type: none; padding: 0px; margin: 0px; }
+table.rss_shopwindow li { padding: 0px; margin: 3px; }
+table.rss_shopwindow img { border: 0px; padding: 0px; margin: 0px; }
+</style>
+<table class='rss_shopwindow'>
+{{for item in items:}}
+    <tr>
+        <td valign='top' align='center'>
+            <a href={{=item['link']}} target=_blank>
+                <ul>
+                    <li>{{=IMG(_src='http://thumbs3.ebaystatic.com/pict/%s4040.jpg' % item['itemID'])}}</li>
+                    <li>{{=item['title']}}</li>
+                    <!-- <li><b>{{=item['currency']}}&nbsp;{{=item['price']}}</b>&nbsp;<img border="0" title="Buy It Now" alt="Buy It Now" src="http://pics.ebaystatic.com/aw/pics/bin_15x54.gif"></li> -->
+                </ul>
+            </a>
+        </td>
+    </tr>
+{{pass}}
+</table>
