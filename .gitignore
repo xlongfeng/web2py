@@ -39,6 +39,8 @@ cron.master
 applications/*
 !applications/welcome
 !applications/welcome/*
+!applications/dandelion
+!applications/dandelion/*
 !applications/examples
 !applications/examples/*
 !applications/admin
