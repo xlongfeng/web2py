@@ -34,12 +34,18 @@ def preview():
     
     try:
         root = ET.fromstring(myrecord.rss)
+        row = []
         for child in root[0]:
             if child.tag == 'item':
                 item = dict()
                 for subitem in child:
                     item[subitem.tag] = subitem.text
-                items.append(item)
+                row.append(item)
+                if len(row) == 4:
+                    items.append(row)
+                    row = []
+        if len(row) > 0:
+            items.append(row)
     except:
         return ''
     

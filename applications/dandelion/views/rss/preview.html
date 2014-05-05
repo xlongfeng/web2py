@@ -9,8 +9,8 @@ table.rss_shopwindow a {
   text-decoration:none;
   display: inline-block;
   vertical-align: top;
-  width: 190px;
-  height: 190px;
+  width: 230px;
+  height: 200px;
   text-align: center;
   overflow: hidden;
   -moz-border-radius: 5px;
@@ -26,8 +26,9 @@ table.rss_shopwindow li { padding: 0px; margin: 3px; }
 table.rss_shopwindow img { border: 0px; padding: 0px; margin: 0px; }
 </style>
 <table class='rss_shopwindow'>
-{{for item in items:}}
+{{for row in items:}}
     <tr>
+{{for item in row:}}
         <td valign='top' align='center'>
             <a href={{=item['link']}} target=_blank>
                 <ul>
@@ -37,6 +38,7 @@ table.rss_shopwindow img { border: 0px; padding: 0px; margin: 0px; }
                 </ul>
             </a>
         </td>
+{{pass}}
     </tr>
 {{pass}}
 </table>
